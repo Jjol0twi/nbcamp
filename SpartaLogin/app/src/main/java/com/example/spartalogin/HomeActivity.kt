@@ -1,33 +1,49 @@
 package com.example.spartalogin
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.core.graphics.drawable.toDrawable
+import kotlin.random.Random
 
 class HomeActivity : ComponentActivity() {
-    private val homeFinishButton : Button  by lazy { findViewById(R.id.home_finish) }
-    private val homeNameText : TextView  by lazy { findViewById(R.id.home_user_name) }
-    private val homeIdText : TextView  by lazy { findViewById(R.id.home_user_id) }
-    private val homeAgeText : TextView  by lazy { findViewById(R.id.home_user_age) }
-    private val homeMbtiText : TextView  by lazy { findViewById(R.id.home_user_mbti) }
+    private val homeFinishButton: Button by lazy { findViewById(R.id.home_finish) }
+    private val homeNameText: TextView by lazy { findViewById(R.id.home_user_name) }
+    private val homeIdText: TextView by lazy { findViewById(R.id.home_user_id) }
+    private val homeAgeText: TextView by lazy { findViewById(R.id.home_user_age) }
+    private val homeMbtiText: TextView by lazy { findViewById(R.id.home_user_mbti) }
+    private val homeImg: ImageView by lazy { findViewById(R.id.home_user_img) }
+
+    //    private val idIntent: String = intent.getStringExtra("user_id").toString()
+    private val idIntent: String by lazy { intent.getStringExtra("user_id").toString()}
+    private var homeImageRandom = ((1..99).random() % 5)
+    private val homeImageList: ArrayList<Int> = arrayListOf(
+        R.drawable.newjeans_bunny2,
+        R.drawable.newjeans_bunny3,
+        R.drawable.newjeans_bunny4,
+        R.drawable.newjeans_bunny5,
+        R.drawable.newjeans_bunny6,
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        val idIntent : String =intent.getStringExtra("user_id").toString()
         homeFinishButton.setOnClickListener { onButtonClickEvent(it) }
-        homeIdText.text= "아이디 : $idIntent"
+        homeIdText.text = "아이디 : $idIntent"
         homeNameText.text = "이름 : 와우"
         homeAgeText.text = "나이 : 3살"
         homeMbtiText.text = "MBTI : BABY-T"
+        homeImg.setImageResource(homeImageList[homeImageRandom])
     }
 
     private fun onButtonClickEvent(view: View) {
-        when (view.id){
-            homeFinishButton.id->{
+        when (view.id) {
+            homeFinishButton.id -> {
                 finish()
             }
         }

@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
@@ -59,8 +60,9 @@ class SignInActivity : ComponentActivity() {
                     val pw = result.data?.getStringExtra("user_pw")
                     signInIdEdit.setText(id)
                     signInPWEdit.setText(pw)
-//                    signInIdEdit.text=Editable.Factory.getInstance().newEditable(id)
 //                    edittext text settext
+//                    (signInIdEdit as TextView).text = id
+//                    signInIdEdit.text=Editable.Factory.getInstance().newEditable(id)
                 }
             }
     }
