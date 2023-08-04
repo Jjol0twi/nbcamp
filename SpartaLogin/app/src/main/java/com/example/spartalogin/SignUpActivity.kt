@@ -33,37 +33,37 @@ class SignUpActivity : ComponentActivity() {
 //                    "입력되지 않은 정보가 있습니다.",
 //                    Toast.LENGTH_SHORT
 //                ).show()
-                if (signUpNameEdit.text.isNullOrBlank()) {
+                if (signUpNameEdit.text.isNullOrBlank()) {  // name edittext가 비였을 경우
                     Toast.makeText(
                         this,
                         "사용자 이름 정보가 입력되지 않았습니다.",
                         Toast.LENGTH_SHORT
                     ).show()
-                    signUpNameEdit.requestFocus()
-                    return
+                    signUpNameEdit.requestFocus()   // 입력 요구하면서 마우스? foucs 가져다주기
+                    return  // 없으면 아래 코드 실행됨
                 }
-                if (signUpIdEdit.text.isNullOrBlank()) {
+                if (signUpIdEdit.text.isNullOrBlank()) {    // ID edittext가 비였을 경우
                     Toast.makeText(
                         this,
                         "아이디 정보가 입력되지 않았습니다.",
                         Toast.LENGTH_SHORT
                     ).show()
-                    signUpIdEdit.requestFocus()
+                    signUpIdEdit.requestFocus() // 입력 요구하면서 마우스? foucs 가져다주기
                     return
                 }
-                if (signUpPWEdit.text.isNullOrBlank()) {
+                if (signUpPWEdit.text.isNullOrBlank()) {    // pw edittext가 비였을 경우
                     Toast.makeText(
                         this,
                         "비밀번호 정보가 입력되지 않았습니다.",
                         Toast.LENGTH_SHORT
                     ).show()
-                    signUpPWEdit.requestFocus()
+                    signUpPWEdit.requestFocus() // 입력 요구하면서 마우스? foucs 가져다주기
                     return
                 }
-                val callbackSignIn = Intent()
-                callbackSignIn.putExtra("user_id", signUpIdEdit.text.toString())
+                val callbackSignIn = Intent()   // activity를 명시적으로 지정해줄 필요가 없어요
+                callbackSignIn.putExtra("user_id", signUpIdEdit.text.toString())    // string 요구하여 string으로 자료형 변환
                 callbackSignIn.putExtra("user_pw", signUpPWEdit.text.toString())
-                setResult(Activity.RESULT_OK, callbackSignIn)
+                setResult(Activity.RESULT_OK, callbackSignIn)   // result_ok로 받는 activity에게 신호를 주고 해당 intent 넘기기
                 finish()
             }
         }

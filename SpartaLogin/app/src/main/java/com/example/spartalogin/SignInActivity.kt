@@ -4,12 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.text.Editable
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
@@ -25,19 +23,19 @@ class SignInActivity : ComponentActivity() {
     private val signUpButton: Button by lazy { findViewById(R.id.signUp_button) }
     private val signInIdEdit: EditText by lazy { findViewById(R.id.signIn_id) }
     private val signInPWEdit: EditText by lazy { findViewById(R.id.signIn_password) }
-    private lateinit var callbakcSignUp: ActivityResultLauncher<Intent>
+    private lateinit var callbakcSignUp: ActivityResultLauncher<Intent> // registerForActivityResult 사용하기 위해 ActivityResultLauncher 선언
     //    private lateinit var signInButton: Button
 //    private lateinit var signUpButton: Button
-//    private lateinit var idEdit: EditText
-//    private lateinit var passwordEdit: EditText
+//    private lateinit var signInIdEdit: EditText
+//    private lateinit var signInPWEdit: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signin)
-//        signInButton = findViewById(R.id.signIn_button)
+//        signInButton = findViewById(R.id.signIn_button)   // lateinit을 사용했을 경우 사용되는 초기화
 //        signUpButton = findViewById(R.id.signUp_button)
-//        idEdit = findViewById(R.id.signIn_id)
-//        passwordEdit = findViewById(R.id.signIn_password)
+//        signInIdEdit = findViewById(R.id.signIn_id)
+//        signInPWEdit = findViewById(R.id.signIn_password)
         // button click event
         signInButton.setOnClickListener { onButtonClickEvent(it) }
         signUpButton.setOnClickListener { onButtonClickEvent(it) }
@@ -59,10 +57,10 @@ class SignInActivity : ComponentActivity() {
                     val id = result.data?.getStringExtra("user_id")
                     val pw = result.data?.getStringExtra("user_pw")
                     signInIdEdit.setText(id)
-                    signInPWEdit.setText(pw)
+                    signInPWEdit.setText(pw)    // edittext의 text와 settext가 요구하는 자료형이 달라요
 //                    edittext text settext
-//                    (signInIdEdit as TextView).text = id
-//                    signInIdEdit.text=Editable.Factory.getInstance().newEditable(id)
+//                    (signInIdEdit as TextView).text = id  // edittext가 아닌 textview로 형변화하여 settext
+//                    signInIdEdit.text=Editable.Factory.getInstance().newEditable(id)  // text일 경우 editable! 자료형을 요구하여 string->editable로 변환하여 입력
                 }
             }
     }
@@ -70,19 +68,19 @@ class SignInActivity : ComponentActivity() {
     private fun onButtonClickEvent(view: View) {
         when (view.id) {
             signInButton.id -> {
-//                if (signInIdEdit.text.isNullOrBlank() || signInPWEdit.text.isNullOrBlank()) {
+//                if (signInIdEdit.text.isNullOrBlank() || signInPWEdit.text.isNullOrBlank()) {   // docs가 원하는 처리
 //                    Toast.makeText(this, "아이디/비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show()
 //                    signInIdEdit.requestFocus()
 //                    return
 //                }
-                if (signInIdEdit.text.isNullOrBlank()) {
+                if (signInIdEdit.text.isNullOrBlank()) {    // ID edittext가 비였을 경우
                     Toast.makeText(this, "아이디를 입력해주세요", Toast.LENGTH_SHORT).show()
-                    signInIdEdit.requestFocus()
-                    return
+                    signInIdEdit.requestFocus() // 입력 요구하면서 마우스? foucs 가져다주기
+                    return  // 없으면 아래 코드 실행됨
                 }
-                if (signInPWEdit.text.isNullOrBlank()) {
+                if (signInPWEdit.text.isNullOrBlank()) {    // pw edittext가 비였을 경우
                     Toast.makeText(this, "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show()
-                    signInPWEdit.requestFocus()
+                    signInPWEdit.requestFocus() // 입력 요구하면서 마우스? foucs 가져다주기
                     return
                 }
                 val callHome = Intent(this, HomeActivity::class.java)
@@ -93,7 +91,7 @@ class SignInActivity : ComponentActivity() {
 
             signUpButton.id -> {
                 val callSingUp = Intent(this, SignUpActivity::class.java)
-                callbakcSignUp.launch(callSingUp)
+                callbakcSignUp.launch(callSingUp)   // registerForActivityResult 기능을 사용하려면 activity를 startacitivty가 아닌 ActivityResultLauncher을 통해서 lauch
             }
         }
 
