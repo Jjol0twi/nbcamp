@@ -9,8 +9,8 @@
         android:id="@+id/home_user_img"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:scaleType="centerCrop"
         android:layout_marginTop="50dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/newjeans_bunny2"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -60,11 +60,13 @@
         android:id="@+id/home_finish"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:text="종료"
-        android:background="@drawable/round_button"
         android:layout_marginBottom="50dp"
+        android:background="@drawable/home_button_selector_backcolor"
+        android:drawableStart="@drawable/home_button_selector_icon"
+        android:outlineProvider="none"
+        android:text="종료"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
