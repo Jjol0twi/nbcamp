@@ -6,13 +6,14 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.core.graphics.drawable.toDrawable
 import kotlin.random.Random
 
 class HomeActivity : ComponentActivity() {
-    private val homeFinishButton: Button by lazy { findViewById(R.id.home_finish) }
+    private val homeFinishButton: LinearLayout by lazy { findViewById(R.id.home_finish) }
     private val homeNameText: TextView by lazy { findViewById(R.id.home_user_name) }
     private val homeIdText: TextView by lazy { findViewById(R.id.home_user_id) }
     private val homeAgeText: TextView by lazy { findViewById(R.id.home_user_age) }
