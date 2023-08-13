@@ -10,6 +10,7 @@ import com.example.ndcampadvanceteam.databinding.MainTodoFragmentBinding
 
 class MainTodoFragment : Fragment() {
     private val binding: MainTodoFragmentBinding by lazy { MainTodoFragmentBinding.inflate(layoutInflater) }
+    private val mainRecyclerView: RecyclerView by lazy { binding.mainTodoRecyclerView }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
