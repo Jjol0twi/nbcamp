@@ -2,8 +2,10 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.AppleMarket" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+         <item name="colorPrimary">@color/chattingButton</item>
     </style>
 
-    <style name="Theme.AppleMarket" parent="Base.Theme.AppleMarket" />
+    <style name="Theme.AppleMarket" parent="Base.Theme.AppleMarket">
+        <item name="android:textColorPrimary">@color/black</item>
+    </style>
 </resources>
