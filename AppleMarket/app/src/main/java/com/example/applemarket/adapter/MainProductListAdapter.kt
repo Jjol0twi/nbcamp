@@ -1,16 +1,34 @@
 package com.example.applemarket.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.applemarket.R
 import com.example.applemarket.databinding.MainProductItemBinding
 import com.example.applemarket.model.ProductItem
+import com.example.applemarket.model.UserData
 import java.text.DecimalFormat
 
 class MainProductListAdapter : RecyclerView.Adapter<MainProductListAdapter.ViewHolder>() {
 
+    interface OnClickItemListener {
+        fun itemProductClick(itemView: View, position: Int)
+    }
+
+    interface OnLongClickItemListener {
+        fun itemProductClick(itemView: View, position: Int)
+
+    }
+
+    var clickItemListener: OnClickItemListener? = null
+    var longClickItemListener: OnLongClickItemListener? = null
     private val productList = mutableListOf<ProductItem>()
+    private val userDataList = mutableListOf<UserData>()
+
+    fun getProductListByIndex(position: Int): ProductItem {
+        return productList[position]
+    }
 
     init {
         addItem(
@@ -132,6 +150,70 @@ class MainProductListAdapter : RecyclerView.Adapter<MainProductListAdapter.ViewH
         )
     }
 
+    init {
+        addUser("admin",1)
+    }
+
+    private fun addUser(
+        name: String,
+        vararg likePost: Int
+    ) {
+        userDataList.add(
+            UserData(
+                name,
+                likePost.toMutableList()
+            )
+        )
+    }
+
+    fun addPostLike(position: Int, name: String = "admin") {
+        val index = getUserIndexByName(name)
+        if (index != null) {
+            userDataList[index].postLike.add(position)
+            productList[position] =
+                productList[position].copy(likeCount = formatNumber(productList[position].likeCount.toInt() + 1))
+        }
+    }
+
+    fun getUserLikePost(name: String = "admin"): MutableList<Int>? {
+        val index = getUserIndexByName(name)
+        if (index != null) {
+            return userDataList[index].postLike
+        }
+        return null
+    }
+
+    private fun getUserIndexByName(name: String): Int? {
+        for ((index, userData) in userDataList.withIndex()) {
+            if (userData.name == name) {
+                return index
+            }
+        }
+        return null
+    }
+
+    fun removeProduct(position: Int, name: String = "admin") {
+        val index = getUserIndexByName(name)
+        productList.removeAt(position)
+        if (getUserLikePost()!=null&&index != null) {
+            for (i in getUserLikePost()!!){
+                if (i>position){
+                    userDataList[index].postLike.remove(i)
+                    userDataList[index].postLike.add(i-1)
+                }
+            }
+        }
+    }
+
+    fun removePostLike(position: Int, name: String = "admin") {
+        val index = getUserIndexByName(name)
+        if (index != null) {
+            userDataList[index].postLike.remove(position)
+            productList[position] =
+                productList[position].copy(likeCount = formatNumber(productList[position].likeCount.toInt() - 1))
+        }
+    }
+
     private fun addItem(
         image: Int,
         name: String,
@@ -174,12 +256,21 @@ class MainProductListAdapter : RecyclerView.Adapter<MainProductListAdapter.ViewH
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding =
+            MainProductItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(
-            MainProductItemBinding.inflate(LayoutInflater.from(parent.context))
+            binding
         )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = with(holder) {
+        holder.itemView.setOnClickListener {
+            clickItemListener?.itemProductClick(it, position)
+        }
+        holder.itemView.setOnLongClickListener {
+            longClickItemListener?.itemProductClick(it, position)
+            return@setOnLongClickListener true
+        }
         itemImage.setImageResource(productList[position].image)
         itemName.text = productList[position].name
         itemDesc.text = productList[position].address
@@ -189,6 +280,9 @@ class MainProductListAdapter : RecyclerView.Adapter<MainProductListAdapter.ViewH
         )
         itemChatCount.text = productList[position].chatCount
         itemLikeCount.text = productList[position].likeCount
+        if (getUserLikePost()?.contains(position) == true) {
+            itemLike.setImageResource(R.drawable.ic_favorite)
+        }
     }
 
     override fun getItemCount(): Int = productList.size

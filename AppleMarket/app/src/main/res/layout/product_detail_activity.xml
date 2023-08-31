@@ -7,6 +7,7 @@
     tools:context=".ProductDetailActivity">
 
     <ImageButton
+        android:background="@color/transparent"
         android:id="@+id/back_to_main_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,6 +69,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/user_locate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="남구 옥동"
@@ -123,6 +125,7 @@
                     android:layout_height="wrap_content"
                     android:text="울산 동해오션뷰 60평 복층 펜트하우스 1일 숙박권 펜션 힐링 숙소 별장"
                     android:textSize="25sp"
+                    android:layout_marginBottom="5dp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -149,6 +152,7 @@
         app:layout_constraintRight_toRightOf="parent">
 
         <ImageButton
+            android:id="@+id/post_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -164,6 +168,7 @@
             android:background="@color/divider" />
 
         <TextView
+            android:id="@+id/product_price"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="150,000원"
