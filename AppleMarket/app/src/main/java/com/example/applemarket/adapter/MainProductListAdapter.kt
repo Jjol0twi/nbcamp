@@ -151,7 +151,7 @@ class MainProductListAdapter : RecyclerView.Adapter<MainProductListAdapter.ViewH
     }
 
     init {
-        addUser("admin",1)
+        addUser("admin", 1)
     }
 
     private fun addUser(
@@ -195,11 +195,11 @@ class MainProductListAdapter : RecyclerView.Adapter<MainProductListAdapter.ViewH
     fun removeProduct(position: Int, name: String = "admin") {
         val index = getUserIndexByName(name)
         productList.removeAt(position)
-        if (getUserLikePost()!=null&&index != null) {
-            for (i in getUserLikePost()!!){
-                if (i>position){
+        if (getUserLikePost() != null && index != null) {
+            for (i in getUserLikePost()!!) {
+                if (i > position) {
                     userDataList[index].postLike.remove(i)
-                    userDataList[index].postLike.add(i-1)
+                    userDataList[index].postLike.add(i - 1)
                 }
             }
         }

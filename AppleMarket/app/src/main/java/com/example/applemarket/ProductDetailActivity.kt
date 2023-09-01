@@ -11,15 +11,21 @@ import com.example.applemarket.model.ProductItem
 import kotlin.properties.Delegates
 
 class ProductDetailActivity : AppCompatActivity() {
+
+    companion object{
+        const val EXTRA_INDEX = "position"
+        const val EXTRA_IS_LIKE = "isLike"
+    }
+
     private lateinit var binding: ProductDetailActivityBinding
     private val dataList: ProductItem? by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("data", ProductItem::class.java)
+            intent.getParcelableExtra(MainActivity.EXTRA_DATA, ProductItem::class.java)
         } else {
-            intent.getParcelableExtra<ProductItem>("data")
+            intent.getParcelableExtra<ProductItem>(MainActivity.EXTRA_DATA)
         }
     }
-    private val dataPosition: Int by lazy { intent.getIntExtra("index", 0) }
+    private val dataPosition: Int by lazy { intent.getIntExtra(MainActivity.EXTRA_INDEX, 0) }
     private val userPostLike by lazy { intent.getIntegerArrayListExtra("userPostLike") }
     private var isLike by Delegates.notNull<Boolean>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,8 +41,8 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun backToMain() {
         val intent = Intent().apply {
-            putExtra("index", dataPosition)
-            putExtra("isLike", isLike)
+            putExtra(EXTRA_INDEX, dataPosition)
+            putExtra(EXTRA_IS_LIKE, isLike)
         }
         setResult(RESULT_OK, intent)
         if (!isFinishing) {
@@ -51,7 +57,6 @@ class ProductDetailActivity : AppCompatActivity() {
         userName.text = dataList?.seller
         userLocate.text = dataList?.address
         productPrice.text = getString(R.string.main_product_price_text, dataList?.price)
-        Log.d("test", isLike.toString()+userPostLike.toString()+intent.getIntegerArrayListExtra("userPostLike").toString())
         if (isLike) {
             postLike.setImageResource(R.drawable.ic_favorite)
         } else {

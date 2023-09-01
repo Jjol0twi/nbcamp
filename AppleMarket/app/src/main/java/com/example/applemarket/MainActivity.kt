@@ -24,6 +24,12 @@ import com.example.applemarket.databinding.MainActivityBinding
 
 
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        const val EXTRA_INDEX = "position"
+        const val EXTRA_DATA = "data"
+    }
+
     private lateinit var binding: MainActivityBinding
     private val listAdapter by lazy { MainProductListAdapter() }
     private lateinit var detailActivityLauncher: ActivityResultLauncher<Intent>
@@ -36,8 +42,11 @@ class MainActivity : AppCompatActivity() {
         detailActivityLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == RESULT_OK) {
-                    val itemIndex = it.data?.getIntExtra("index", 0)
-                    val isLike = it.data?.getBooleanExtra("isLike", false) ?: false
+                    val itemIndex = it.data?.getIntExtra(ProductDetailActivity.EXTRA_INDEX, 0)
+                    val isLike =
+                        it.data?.getBooleanExtra(ProductDetailActivity.EXTRA_IS_LIKE, false)
+                            ?: false
+                    // TODo 이전과 같으면 처리 아니면 안 처리
                     if (itemIndex != null) {
                         if (isLike) {
                             listAdapter.addPostLike(itemIndex)
@@ -53,12 +62,14 @@ class MainActivity : AppCompatActivity() {
     private fun initView() = with(binding) {
         val fadeIn = AlphaAnimation(0f, 1f).apply { duration = 500 }
         val fadeOut = AlphaAnimation(1f, 0f).apply { duration = 500 }
+        var isTop: Boolean = true
         val decoration = DividerItemDecoration(this@MainActivity, DividerItemDecoration.VERTICAL)
         spinnerItems.add("내배캠동")
         val spinnerAdapter =
             ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_item, spinnerItems)
         productListView.adapter = listAdapter
         productListView.addItemDecoration(decoration)
+        navListTop.visibility = View.INVISIBLE
         toolbar.setOnMenuItemClickListener { menuItemClickEvent(it) }
         toolbarSpinner.adapter = spinnerAdapter
         listAdapter.clickItemListener =
@@ -66,8 +77,8 @@ class MainActivity : AppCompatActivity() {
                 override fun itemProductClick(itemView: View, position: Int) {
                     Log.d("test", arrayOf(listAdapter.getUserLikePost())[0].toString())
                     val intent = Intent(this@MainActivity, ProductDetailActivity::class.java)
-                    intent.putExtra("index", position)
-                    intent.putExtra("data", listAdapter.getProductListByIndex(position))
+                    intent.putExtra(EXTRA_INDEX, position)
+                    intent.putExtra(EXTRA_DATA, listAdapter.getProductListByIndex(position))
                     intent.putExtra("userPostLike", arrayOf(listAdapter.getUserLikePost()))
                     detailActivityLauncher.launch(intent)
                 }
@@ -81,6 +92,27 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        productListView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!productListView.canScrollVertically(-1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    navListTop.startAnimation(fadeOut)
+                    navListTop.visibility = View.GONE
+                    isTop = true
+                } else {
+                    if (isTop) {
+                        navListTop.visibility = View.VISIBLE
+                        navListTop.animation = fadeIn
+                        isTop = false
+                    }
+                }
+            }
+
+        })
+        navListTop.setOnClickListener {
+            productListView.smoothScrollToPosition(0)
+        }
+
     }
 
     private fun showDialog(title: String, message: String, okAction: () -> Unit) {
@@ -121,7 +153,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun getNotification() {
         val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-
         val builder: NotificationCompat.Builder
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = "main_channel"
