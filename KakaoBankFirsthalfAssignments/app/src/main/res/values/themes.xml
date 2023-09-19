@@ -5,5 +5,7 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.KakaoBankFirsthalfAssignments" parent="Base.Theme.KakaoBankFirsthalfAssignments" />
+    <style name="Theme.KakaoBankFirsthalfAssignments" parent="Base.Theme.KakaoBankFirsthalfAssignments">
+        <item name="colorPrimary">#C26432</item>
+    </style>
 </resources>
