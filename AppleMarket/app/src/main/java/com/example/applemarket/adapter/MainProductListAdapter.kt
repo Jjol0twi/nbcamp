@@ -26,6 +26,10 @@ class MainProductListAdapter : RecyclerView.Adapter<MainProductListAdapter.ViewH
     private val productList = mutableListOf<ProductItem>()
     private val userDataList = mutableListOf<UserData>()
 
+    fun setOnClickItemListener(){
+
+    }
+
     fun getProductListByIndex(position: Int): ProductItem {
         return productList[position]
     }
