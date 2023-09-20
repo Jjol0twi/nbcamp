@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-  
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/search_results"
+        android:icon="@drawable/icon_home"
+        android:title="@string/main_navigation_menu_search_result"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/my_storage"
+        android:icon="@drawable/icon_dashboard"
+        android:title="@string/main_navigation_menu_my_storage"
+        app:showAsAction="always" />
 </menu>
