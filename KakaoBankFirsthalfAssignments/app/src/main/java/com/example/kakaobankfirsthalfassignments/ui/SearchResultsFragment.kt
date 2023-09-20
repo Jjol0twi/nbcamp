@@ -1,4 +1,4 @@
-package com.example.kakaobankfirsthalfassignments
+package com.example.kakaobankfirsthalfassignments.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
