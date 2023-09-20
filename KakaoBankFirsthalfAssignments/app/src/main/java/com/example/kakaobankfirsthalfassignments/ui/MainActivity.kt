@@ -32,6 +32,19 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+//        navigationView.setOnItemSelectedListener { it ->    // navigationView menu click event
+//            when (it.itemId) {
+//                R.id.my_storage -> {    // home menu
+//                    displayFragment(MyStorageFragment())
+//                }
+//
+//                R.id.search_results -> {    // my storage click
+//                    displayFragment(SearchResultsFragment())
+//                }
+//            }
+//            true
+//        }
+//        navigationView.selectedItemId = R.id.search_results // first screnn clicked
     }
 
     private fun displayFragment(fragment: Fragment) {   // fragment change
