@@ -2,5 +2,6 @@
     <string name="app_name">KakaoBankFirsthalfAssignments</string>
     <string name="main_navigation_menu_search_result">검색 결과</string>
     <string name="main_navigation_menu_my_storage">내 보관함</string>
+    <string name="item_search_result_preview">검색한 이미지/동영상 미리보기</string>
 
 </resources>
