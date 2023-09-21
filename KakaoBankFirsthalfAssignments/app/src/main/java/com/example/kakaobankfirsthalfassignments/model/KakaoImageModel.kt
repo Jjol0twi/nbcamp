@@ -3,9 +3,9 @@ package com.example.kakaobankfirsthalfassignments.model
 
 import com.google.gson.annotations.SerializedName
 
-data class KakaoImageSearch(
+data class KakaoImageModel(
    @SerializedName("documents")
-   val documents: List<Document>,
+   val documents: ArrayList<Document>,
    @SerializedName("meta")
    val meta: Meta
 ){
