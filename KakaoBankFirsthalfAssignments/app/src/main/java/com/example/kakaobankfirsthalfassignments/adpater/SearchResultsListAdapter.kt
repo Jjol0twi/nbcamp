@@ -12,17 +12,29 @@ class SearchResultsListAdapter : RecyclerView.Adapter<SearchResultsListAdapter.V
             fun bind() = with(binding){
 
             }
+    private var itemList: ArrayList<KakaoImageModel.Document> = arrayListOf()
+    }
+
+    class ViewHolder(private val binding: ItemSearchResultsBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: KakaoImageModel.Document) = with(binding) {
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        TODO("Not yet implemented")
+        return ViewHolder(
+            ItemSearchResultsBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getItemCount(): Int = itemList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val item = itemList[position]
+        holder.bind(item)
     }
 }
