@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
 //        navigationView.selectedItemId = R.id.search_results // first screnn clicked
     }
 
+
     private fun displayFragment(fragment: Fragment) {   // fragment change
         supportFragmentManager.beginTransaction()
             .replace(binding.fragmentContainer.id, fragment)    // get fragment
