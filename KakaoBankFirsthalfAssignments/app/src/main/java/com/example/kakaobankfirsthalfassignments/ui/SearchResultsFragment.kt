@@ -11,6 +11,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.kakaobankfirsthalfassignments.adpater.SearchResultsListAdapter
 import com.example.kakaobankfirsthalfassignments.databinding.SearchResultsFragmentBinding
+import com.example.kakaobankfirsthalfassignments.model.SearchResultModel
 import com.example.kakaobankfirsthalfassignments.network.KakaoRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -90,13 +91,17 @@ class SearchResultsFragment : Fragment() {
     }
 
     private fun getResultData(query: String?): Boolean {
+        var itemDataList : ArrayList<SearchResultModel> = arrayListOf()
         if (query.isNullOrBlank()) return true
         GlobalScope.launch(Dispatchers.IO) {
             kotlin.runCatching {
                 val result =
                     KakaoRepository().getImageData(query = query, sortType = "recency")
                 withContext(Dispatchers.Main) {
-                    listAdapter.refreshData(result)
+                    result.documents.forEach { doc ->
+                        itemDataList.add(SearchResultModel(doc.thumbnailUrl, doc.siteName, doc.datetime))
+                    }
+                    listAdapter.refreshData(itemDataList)
                 }
             }.onFailure {
                 Log.d("error", "response failed")
