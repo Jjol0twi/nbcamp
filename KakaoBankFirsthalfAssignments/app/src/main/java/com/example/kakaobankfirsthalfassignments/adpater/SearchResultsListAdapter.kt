@@ -6,24 +6,26 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.kakaobankfirsthalfassignments.databinding.ItemSearchResultsBinding
 import com.example.kakaobankfirsthalfassignments.model.KakaoImageModel
+import com.example.kakaobankfirsthalfassignments.model.SearchResultModel
 
 class SearchResultsListAdapter : RecyclerView.Adapter<SearchResultsListAdapter.ViewHolder>() {
 
-    private var itemList: ArrayList<KakaoImageModel.Document> = arrayListOf()
+    private var itemList: ArrayList<SearchResultModel> = arrayListOf()
 
-    fun refreshData(item: KakaoImageModel) {
-        itemList = item.documents
+    fun refreshData(item: ArrayList<SearchResultModel>) {
+        itemList.clear()
+        itemList = item
         notifyDataSetChanged()
     }
 
     class ViewHolder(private val binding: ItemSearchResultsBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: KakaoImageModel.Document) = with(binding) {
+        fun bind(item: SearchResultModel) = with(binding) {
             Glide.with(binding.root)
-                .load(item.thumbnailUrl)
+                .load(item.previewImg)
                 .into(previewImg)
-            resultTitle.text = item.siteName
-            resultDate.text = item.datetime
+            resultTitle.text = item.title
+            resultDate.text = item.postTime
         }
     }
 
