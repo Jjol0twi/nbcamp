@@ -1,13 +1,21 @@
 package com.example.kakaobankfirsthalfassignments.ui
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.kakaobankfirsthalfassignments.adpater.SearchResultsListAdapter
 import com.example.kakaobankfirsthalfassignments.databinding.SearchResultsFragmentBinding
+import com.example.kakaobankfirsthalfassignments.network.KakaoRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SearchResultsFragment : Fragment() {
 
@@ -18,6 +26,15 @@ class SearchResultsFragment : Fragment() {
     private val listAdapter by lazy {
         SearchResultsListAdapter()
     }
+
+    private val pref by lazy {
+        requireContext().getSharedPreferences(preference_file_key, Context.MODE_PRIVATE)
+    }
+
+//    private val kakaoSearchService by lazy {
+//        KakaoNetwork.apiService
+//    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -57,6 +74,7 @@ class SearchResultsFragment : Fragment() {
 //                    }
 //                })
             override fun onQueryTextSubmit(query: String?): Boolean {
+                saveSearchQuery(query)
                 return getResultData(query)
             }
 
@@ -64,6 +82,11 @@ class SearchResultsFragment : Fragment() {
                 return false
             }
         })
+        getSearchQuery()
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
     private fun getResultData(query: String?): Boolean {
@@ -81,12 +104,27 @@ class SearchResultsFragment : Fragment() {
         }
         return false
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        saveSearchQuery(binding.searchView.query.toString())
         _binding = null
     }
 
-    companion object {
+    private fun getSearchQuery() {
+        val savedQuery = pref.getString(query_key, null)
+        binding.searchView.setQuery(savedQuery,true)
+    }
 
+    private fun saveSearchQuery(query: String?) {
+        if (!query.isNullOrBlank()) {
+            pref.edit().putString(query_key, query).apply()
+        }
+
+    }
+
+    companion object {
+        const val preference_file_key = "pref"
+        const val query_key = "search_query"
     }
 }
