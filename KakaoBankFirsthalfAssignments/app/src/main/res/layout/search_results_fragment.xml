@@ -7,7 +7,7 @@
     tools:context=".ui.SearchResultsFragment">
 
     <androidx.appcompat.widget.SearchView
-        android:id="@+id/search_content"
+        android:id="@+id/search_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:inputType="text"
@@ -18,12 +18,12 @@
         app:queryHint="방탄소년단" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/search_grid_view"
+        android:id="@+id/results_grid_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_content" />
+        app:layout_constraintTop_toBottomOf="@id/search_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
