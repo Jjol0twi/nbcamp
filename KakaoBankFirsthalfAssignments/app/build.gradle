@@ -23,16 +23,20 @@ android {
     }
 
     buildTypes {
-        debug{
-            shrinkResources false	//resource 축소
-            minifyEnabled true	// proguard 활성화 유무
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        release{
-            shrinkResources true	//resource 축소
-            minifyEnabled true	// proguard 활성화 유무
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+//        debug {
+//            shrinkResources false    //resource 축소
+//            minifyEnabled true    // proguard 활성화 유무
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//        }
+//        release {
+//            shrinkResources true    //resource 축소
+//            minifyEnabled true    // proguard 활성화 유무
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
