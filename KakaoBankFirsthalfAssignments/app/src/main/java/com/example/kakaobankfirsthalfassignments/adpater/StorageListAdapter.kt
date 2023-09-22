@@ -8,25 +8,18 @@ import com.bumptech.glide.Glide
 import com.example.kakaobankfirsthalfassignments.databinding.ItemSearchResultsBinding
 import com.example.kakaobankfirsthalfassignments.model.SearchResultModel
 
-class SearchResultsListAdapter(private val onClick: (SearchResultModel) -> Unit) :
-    RecyclerView.Adapter<SearchResultsListAdapter.ViewHolder>() {
+class StorageListAdapter(storageList: ArrayList<SearchResultModel>, private val onClick: (SearchResultModel) -> Unit) :
+    RecyclerView.Adapter<StorageListAdapter.ViewHolder>() {
 
     private val itemList: ArrayList<SearchResultModel> = arrayListOf()
 
-    fun refreshData(item: ArrayList<SearchResultModel>) {
+    init {
         itemList.clear()
-        itemList.addAll(item)
-        notifyDataSetChanged()
+        itemList.addAll(storageList)
     }
 
-    private fun switchItemStorage(position: Int) {
-        itemList[position] = itemList[position].copy(isStorage = !itemList[position].isStorage)
-    }
-
-    class ViewHolder(
-        private val binding: ItemSearchResultsBinding,
-        private val onClick: (SearchResultModel) -> Unit
-    ) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: ItemSearchResultsBinding, private val onClick: (SearchResultModel) -> Unit) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(item: SearchResultModel) = with(binding) {
             Glide.with(binding.root)
                 .load(item.previewImg)
@@ -42,7 +35,7 @@ class SearchResultsListAdapter(private val onClick: (SearchResultModel) -> Unit)
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            ), onClick
+            ),onClick
         )
     }
 
@@ -51,9 +44,17 @@ class SearchResultsListAdapter(private val onClick: (SearchResultModel) -> Unit)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = itemList[position]
         holder.bind(item)
-        holder.itemView.setOnClickListener {
-            switchItemStorage(position)
-            onClick(itemList[position])
+        if (itemList.size > 0) {
+            holder.itemView.setOnClickListener {
+                switchItemStorage(position)
+                onClick(item)
+            }
         }
+    }
+
+    private fun switchItemStorage(position: Int) {
+        itemList[position] = itemList[position].copy(isStorage = false)
+        itemList.removeAll { it.title == itemList[position].title && it.previewImg == itemList[position].previewImg && it.postTime == itemList[position].postTime }
+        notifyDataSetChanged()
     }
 }

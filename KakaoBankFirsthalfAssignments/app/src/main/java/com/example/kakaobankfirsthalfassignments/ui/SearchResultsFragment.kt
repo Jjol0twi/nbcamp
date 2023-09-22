@@ -1,6 +1,7 @@
 package com.example.kakaobankfirsthalfassignments.ui
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,10 +14,14 @@ import com.example.kakaobankfirsthalfassignments.adpater.SearchResultsListAdapte
 import com.example.kakaobankfirsthalfassignments.databinding.SearchResultsFragmentBinding
 import com.example.kakaobankfirsthalfassignments.model.SearchResultModel
 import com.example.kakaobankfirsthalfassignments.network.KakaoRepository
+import com.example.kakaobankfirsthalfassignments.utils.DataTransferListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class SearchResultsFragment : Fragment() {
 
@@ -24,13 +29,28 @@ class SearchResultsFragment : Fragment() {
     private var _binding: SearchResultsFragmentBinding? = null
     private val binding get() = _binding!!
 
+    private val storageList by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelableArrayList("key", SearchResultModel::class.java) ?: arrayListOf<SearchResultModel>()
+        } else {
+            arguments?.getParcelableArrayList("key") ?: arrayListOf<SearchResultModel>()
+        }
+    }
+
     private val listAdapter by lazy {
-        SearchResultsListAdapter()
+        SearchResultsListAdapter() { data ->
+            if (data.isStorage) {
+                storageList.add(data)
+            } else {
+                storageList.removeAll { it.title == data.title && it.previewImg == data.previewImg && it.postTime == data.postTime }
+            }
+        }
     }
 
     private val pref by lazy {
         requireContext().getSharedPreferences(preference_file_key, Context.MODE_PRIVATE)
     }
+
 
 //    private val kakaoSearchService by lazy {
 //        KakaoNetwork.apiService
@@ -51,9 +71,11 @@ class SearchResultsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        Log.d("test","search: create")
     }
 
     private fun initView() = with(binding) {
+        Log.d("test", "$storageList")
         resultsGridView.adapter = listAdapter
         resultsGridView.layoutManager = GridLayoutManager(context, 2)
         searchView.isSubmitButtonEnabled = true
@@ -86,12 +108,8 @@ class SearchResultsFragment : Fragment() {
         getSearchQuery()
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     private fun getResultData(query: String?): Boolean {
-        var itemDataList : ArrayList<SearchResultModel> = arrayListOf()
+        var itemDataList: ArrayList<SearchResultModel> = arrayListOf()
         if (query.isNullOrBlank()) return true
         GlobalScope.launch(Dispatchers.IO) {
             kotlin.runCatching {
@@ -99,7 +117,13 @@ class SearchResultsFragment : Fragment() {
                     KakaoRepository().getImageData(query = query, sortType = "recency")
                 withContext(Dispatchers.Main) {
                     result.documents.forEach { doc ->
-                        itemDataList.add(SearchResultModel(doc.thumbnailUrl, doc.siteName, doc.datetime))
+                        var date = doc.datetime
+                        var parsedate =
+                            LocalDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+                        date = parsedate.format(
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                        )
+                        itemDataList.add(SearchResultModel(doc.thumbnailUrl, doc.siteName, date))
                     }
                     listAdapter.refreshData(itemDataList)
                 }
@@ -113,13 +137,28 @@ class SearchResultsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         saveSearchQuery(binding.searchView.query.toString())
+        Log.d("test","search: destory")
         _binding = null
+    }
+
+    override fun onStop() {
+        super.onStop()
+        sendDataToActivity(storageList)
+        Log.d("test","search: stop")
+    }
+
+    private fun sendDataToActivity(data: ArrayList<SearchResultModel>) {
+        if (activity is DataTransferListener) {
+            val listener = activity as DataTransferListener
+            listener.onDataTransfer(data)
+        }
     }
 
     private fun getSearchQuery() {
         val savedQuery = pref.getString(query_key, null)
-        binding.searchView.setQuery(savedQuery,true)
+        binding.searchView.setQuery(savedQuery, true)
     }
+
 
     private fun saveSearchQuery(query: String?) {
         if (!query.isNullOrBlank()) {
@@ -131,5 +170,14 @@ class SearchResultsFragment : Fragment() {
     companion object {
         const val preference_file_key = "pref"
         const val query_key = "search_query"
+
+        private lateinit var arguments: Bundle
+        fun newInstance(dataList: ArrayList<SearchResultModel>): SearchResultsFragment {
+            val fragment = SearchResultsFragment()
+            val args = Bundle()
+            args.putParcelableArrayList("key", dataList)
+            fragment.arguments = args
+            return fragment
+        }
     }
 }
