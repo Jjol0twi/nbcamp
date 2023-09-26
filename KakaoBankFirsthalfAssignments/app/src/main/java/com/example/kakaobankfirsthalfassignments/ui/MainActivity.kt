@@ -3,6 +3,8 @@ package com.example.kakaobankfirsthalfassignments.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import com.example.kakaobankfirsthalfassignments.R
 import com.example.kakaobankfirsthalfassignments.databinding.MainActivityBinding

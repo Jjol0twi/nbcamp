@@ -59,13 +59,13 @@ class MyStorageFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d("test", "my stoarge: destory")
+        Log.d("test", "my storage: destory")
         _binding = null
     }
 
     override fun onStop() {
         super.onStop()
-        Log.d("test", "my stoarge: stop, ${storageList.size}")
+        Log.d("test", "my storage: stop, ${storageList.size}")
         sendDataToActivity(storageList)
     }
 
